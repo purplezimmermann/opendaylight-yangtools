@@ -22,14 +22,20 @@ import org.opendaylight.yangtools.yang.data.util.codec.IdentityCodecUtil;
 import org.opendaylight.yangtools.yang.data.util.codec.QNameCodecUtil;
 import org.opendaylight.yangtools.yang.model.api.Module;
 import org.opendaylight.yangtools.yang.model.api.SchemaContext;
+import org.opendaylight.yangtools.yang.model.api.type.IdentityrefTypeDefinition;
 
 final class IdentityrefXmlCodec implements XmlCodec<QName> {
     private final SchemaContext schemaContext;
-    private final QNameModule parentModule;
+    private final IdentityrefTypeDefinition type;
+    // private final QNameModule parentModule;
 
-    IdentityrefXmlCodec(final SchemaContext context, final QNameModule parentModule) {
+    IdentityrefXmlCodec(
+            final SchemaContext context, final IdentityrefTypeDefinition type, final QNameModule parentModule) {
         this.schemaContext = requireNonNull(context);
-        this.parentModule = requireNonNull(parentModule);
+        this.type = type; // requireNonNull(type);
+
+        // ADVA: No need for parentModule here. Implicit module is better determined from type
+        // this.parentModule = requireNonNull(parentModule);
     }
 
     @Override
@@ -41,7 +47,10 @@ final class IdentityrefXmlCodec implements XmlCodec<QName> {
     public QName parseValue(final NamespaceContext ctx, final String str) {
         return IdentityCodecUtil.parseIdentity(str, schemaContext, prefix -> {
             if (prefix.isEmpty()) {
-                return parentModule;
+                // return parentModule;
+
+                // ADVA: Better use module of type definition
+                return this.type.getIdentities().iterator().next().getPath().getLastComponent().getModule();
             }
 
             final String prefixedNS = ctx.getNamespaceURI(prefix);

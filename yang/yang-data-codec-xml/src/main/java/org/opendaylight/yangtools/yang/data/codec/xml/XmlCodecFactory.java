@@ -108,7 +108,7 @@ public final class XmlCodecFactory extends AbstractCodecFactory<XmlCodec<?>> {
 
     @Override
     protected XmlCodec<?> identityRefCodec(final IdentityrefTypeDefinition type, final QNameModule module) {
-        return new IdentityrefXmlCodec(getSchemaContext(), module);
+        return new IdentityrefXmlCodec(getSchemaContext(), type, module);
     }
 
     @Override
