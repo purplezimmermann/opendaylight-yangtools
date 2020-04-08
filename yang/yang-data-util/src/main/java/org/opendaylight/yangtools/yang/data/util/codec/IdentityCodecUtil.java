@@ -18,6 +18,9 @@ import org.opendaylight.yangtools.yang.common.QNameModule;
 import org.opendaylight.yangtools.yang.model.api.IdentitySchemaNode;
 import org.opendaylight.yangtools.yang.model.api.Module;
 import org.opendaylight.yangtools.yang.model.api.SchemaContext;
+import org.opendaylight.yangtools.yang.model.api.type.IdentityrefTypeDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility methods for implementing string-to-identity codecs.
@@ -27,6 +30,9 @@ import org.opendaylight.yangtools.yang.model.api.SchemaContext;
 @Beta
 @NonNullByDefault
 public final class IdentityCodecUtil {
+
+    private static final Logger LOG = LoggerFactory.getLogger(IdentityCodecUtil.class);
+
     private IdentityCodecUtil() {
         // Hidden on purpose
     }
@@ -42,15 +48,36 @@ public final class IdentityCodecUtil {
      * @throws IllegalArgumentException if the value is invalid or does not refer to an existing identity
      */
     public static IdentitySchemaNode parseIdentity(final String value, final SchemaContext schemaContext,
-            final Function<String, QNameModule> prefixToModule) {
+            final IdentityrefTypeDefinition type, final Function<String, QNameModule> prefixToModule) {
         final QName qname = QNameCodecUtil.decodeQName(value, prefixToModule);
-        final Optional<Module> optModule = schemaContext.findModule(qname.getModule());
+        Optional<Module> optModule = schemaContext.findModule(qname.getModule());
         checkState(optModule.isPresent(), "Parsed QName %s refers to a non-existent module", qname);
 
+        /*
+        Set<IdentitySchemaNode> identities = type.getIdentities();
+        if (type != null) {
+            optModule = schemaContext.findModule(type.getQName().getModule());
+            checkState(optModule.isPresent(), "QName %s refers to a non-existent module", qname);
+        }
+        */
+
+        LOG.debug("Identity type: {}", type);
+        LOG.debug("Module of identity type: {}", optModule.get());
+        LOG.debug("Matching {} ...", qname);
         for (IdentitySchemaNode identity : optModule.get().getIdentities()) {
+            LOG.debug("Against: {}", identity.getQName());
             if (qname.equals(identity.getQName())) {
                 return identity;
             }
+
+            /*
+            for (IdentitySchemaNode derived : identity.getDerivedIdentities()) {
+                LOG.info("Against: {}", derived.getQName());
+                if (qname.equals(derived.getQName())) {
+                    return identity;
+                }
+            }
+            */
         }
 
         throw new IllegalArgumentException("Parsed QName " + qname + " does not refer to a valid identity");

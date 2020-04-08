@@ -34,38 +34,38 @@ public class IdentityCodecUtilTest {
 
     @Test
     public void testCorrectInput() {
-        assertNotNull(IdentityCodecUtil.parseIdentity("yt846:foo", SCHEMA_CONTEXT,
+        assertNotNull(IdentityCodecUtil.parseIdentity("yt846:foo", SCHEMA_CONTEXT, null,
             IdentityCodecUtilTest::resolvePrefix));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNonExistent() {
-        IdentityCodecUtil.parseIdentity("yt846:bar", SCHEMA_CONTEXT, IdentityCodecUtilTest::resolvePrefix);
+        IdentityCodecUtil.parseIdentity("yt846:bar", SCHEMA_CONTEXT, null, IdentityCodecUtilTest::resolvePrefix);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testEmptyLocalName() {
-        IdentityCodecUtil.parseIdentity("yt846:", SCHEMA_CONTEXT, IdentityCodecUtilTest::resolvePrefix);
+        IdentityCodecUtil.parseIdentity("yt846:", SCHEMA_CONTEXT, null, IdentityCodecUtilTest::resolvePrefix);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testEmptyString() {
-        IdentityCodecUtil.parseIdentity("", SCHEMA_CONTEXT, IdentityCodecUtilTest::resolvePrefix);
+        IdentityCodecUtil.parseIdentity("", SCHEMA_CONTEXT, null, IdentityCodecUtilTest::resolvePrefix);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testNoPrefix() {
-        IdentityCodecUtil.parseIdentity("foo", SCHEMA_CONTEXT, IdentityCodecUtilTest::resolvePrefix);
+        IdentityCodecUtil.parseIdentity("foo", SCHEMA_CONTEXT, null, IdentityCodecUtilTest::resolvePrefix);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testEmptyPrefix() {
-        IdentityCodecUtil.parseIdentity(":foo", SCHEMA_CONTEXT, IdentityCodecUtilTest::resolvePrefix);
+        IdentityCodecUtil.parseIdentity(":foo", SCHEMA_CONTEXT, null, IdentityCodecUtilTest::resolvePrefix);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testColon() {
-        IdentityCodecUtil.parseIdentity(":", SCHEMA_CONTEXT, IdentityCodecUtilTest::resolvePrefix);
+        IdentityCodecUtil.parseIdentity(":", SCHEMA_CONTEXT, null, IdentityCodecUtilTest::resolvePrefix);
     }
 
 
