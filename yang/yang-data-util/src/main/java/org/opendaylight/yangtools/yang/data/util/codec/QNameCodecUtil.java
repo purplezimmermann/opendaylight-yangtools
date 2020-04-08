@@ -10,6 +10,7 @@ package org.opendaylight.yangtools.yang.data.util.codec;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import java.util.Iterator;
 import java.util.function.Function;
@@ -23,6 +24,16 @@ import org.opendaylight.yangtools.yang.common.QNameModule;
  */
 @Beta
 public final class QNameCodecUtil {
+
+    /**
+     * Splits {@code "(namespace)name"} input.
+     */
+    private static final Splitter QUALIFIED_SPLITTER = Splitter.on(')')
+            .trimResults(CharMatcher.is('(').or(CharMatcher.whitespace()));
+
+    /**
+     * Splits {@code "prefix:name"} input.
+     */
     private static final Splitter COLON_SPLITTER = Splitter.on(':').trimResults();
 
     private QNameCodecUtil() {
@@ -30,6 +41,17 @@ public final class QNameCodecUtil {
     }
 
     public static QName decodeQName(final String str, final Function<String, QNameModule> prefixToModule) {
+        // First check str for (namespace)name format
+        final Iterator<String> qualifiedIt = QUALIFIED_SPLITTER.split(str).iterator();
+
+        if (qualifiedIt.hasNext()) {
+            qualifiedIt.next();
+            if (qualifiedIt.hasNext()) {
+                return QName.create(str);
+            }
+        }
+
+        // Then, if first check unsuccessful, check str for prefix:name format
         final Iterator<String> it = COLON_SPLITTER.split(str).iterator();
 
         // Empty string
