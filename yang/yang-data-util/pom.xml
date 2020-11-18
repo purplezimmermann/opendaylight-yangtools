@@ -19,6 +19,7 @@
     <artifactId>yang-data-util</artifactId>
     <packaging>bundle</packaging>
     <name>${project.artifactId}</name>
+    <version>5.0.7_1-ADVA</version>
     <description>${project.artifactId}</description>
 
     <dependencies>
