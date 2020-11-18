@@ -19,6 +19,7 @@
     <artifactId>yang-data-codec-xml</artifactId>
     <packaging>bundle</packaging>
     <name>${project.artifactId}</name>
+    <version>5.0.7_1-ADVA</version>
     <description>XML (RFC7950) encoding for NormalizedNodes</description>
 
     <dependencies>
@@ -41,6 +42,7 @@
         <dependency>
             <groupId>org.opendaylight.yangtools</groupId>
             <artifactId>yang-data-util</artifactId>
+            <version>5.0.7_1-ADVA</version>
         </dependency>
         <dependency>
             <groupId>org.opendaylight.yangtools</groupId>
