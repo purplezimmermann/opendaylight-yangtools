@@ -19,6 +19,7 @@
     <artifactId>util</artifactId>
     <packaging>bundle</packaging>
     <name>${project.artifactId}</name>
+    <version>5.0.7_1-ADVA</version>
     <description>Common utilities</description>
 
     <dependencies>
