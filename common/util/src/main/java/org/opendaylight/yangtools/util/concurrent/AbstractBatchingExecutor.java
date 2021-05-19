@@ -306,6 +306,9 @@ abstract class AbstractBatchingExecutor<K, T> extends AbstractIdentifiable<Strin
             } catch (Exception e) {
                 // We'll let a RuntimeException from the worker slide and keep sending any remaining tasks.
                 LOG.error("{}: Error invoking worker {} with {}", getIdentifier(), key, tasks, e);
+
+                // ADVA: We want the worker to stop and the exception to be seen outside
+                throw new RuntimeException(e);
             }
         }
     }
